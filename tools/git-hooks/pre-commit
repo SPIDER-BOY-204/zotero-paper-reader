@@ -1,0 +1,29 @@
+#!/bin/sh
+# pre-commit：拦下明文密钥。真密钥一旦 staged 就拒绝提交。
+# 只匹配“长得像真密钥”的长串，占位符（sk-xxx、sk-你的token）不会被误伤。
+
+set -u
+
+PATTERNS='(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{40,}|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|eyJ[A-Za-z0-9_-]{40,}\.[A-Za-z0-9_-]{10,})'
+
+# --cached 查的是暂存区内容；-I 跳过二进制
+hits=$(git grep --cached -I -n -E -e "$PATTERNS" -- . 2>/dev/null)
+
+if [ -n "$hits" ]; then
+	echo ""
+	echo "✗ 提交被拒绝：暂存内容里发现疑似明文密钥"
+	echo "────────────────────────────────────────"
+	echo "$hits" | cut -c1-120
+	echo "────────────────────────────────────────"
+	echo ""
+	echo "  密钥不放仓库。做法："
+	echo "    1) git reset HEAD <文件>   把它移出暂存区"
+	echo "    2) 把值挪到 ~/.dsh/.credentials.yaml 或 mineru.json（已被 .gitignore 覆盖）"
+	echo "    3) 仓库里只留占位符，真实值用命令行参数传"
+	echo ""
+	echo "  已经提交过一次的话，历史里也有，必须换密钥（rotate），删除文件没用。"
+	echo ""
+	exit 1
+fi
+
+exit 0

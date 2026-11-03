@@ -1,0 +1,30 @@
+{
+  "_说明": "自定义 LLM 路由的目录模板。复制成 llm-catalog.local.json 再填真实值（local 不入库）。字段含义见 tools/fill_llm_models.py 顶部注释。",
+  "provider": "myprovider",
+  "displayName": "My Provider",
+  "api": "openai-completions",
+  "baseURL": "https://REPLACE-ME.example.edu/v1",
+  "apiKeyEnv": "LLM_API_KEY",
+  "models": [
+    {
+      "id": "example-flash",
+      "name": "Example Flash",
+      "input": ["text", "image"],
+      "contextWindow": 262144,
+      "reasoningEfforts": { "low": "low", "medium": "medium", "high": "high" }
+    },
+    {
+      "id": "example-text-only",
+      "name": "Example Text Only",
+      "input": ["text"],
+      "contextWindow": 262144
+    },
+    {
+      "id": "example-no-reasoning",
+      "name": "Example No Reasoning",
+      "input": ["text"],
+      "contextWindow": 131072,
+      "reasoningEfforts": false
+    }
+  ]
+}

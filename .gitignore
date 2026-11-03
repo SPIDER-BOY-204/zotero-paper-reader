@@ -1,0 +1,30 @@
+# 绝不提交的东西
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# DSH 本机状态
+node_modules/
+data/
+.dsh-paper-reader/
+mineru.json
+*.bak
+*.bak-*
+
+# 内部端点与型号清单（仓库公开，真实值只留在本机）
+llm-catalog.local.json
+
+# 密钥与凭据（模板里没有它们，但防止手滑）
+.credentials.yaml
+*.token
+*.key
+.env
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,44 @@
+# 追加到 profile 的 cordis.patch.yml 末尾：把 dsh-pdf-mineru 切到官方云。
+# 注意：加载器的 patch 是“整段覆盖 config”，所以 providers 必须写全，不能只写 activeProvider。
+# token 不放这里 —— 它放在 ~/.dsh/.credentials.yaml 的 refs.MINERU_API_KEY，
+# 由 provider 的 apiKeyEnv 读取。
+#
+# id 与 bundle 自带的条目同名，表示“覆盖该条目”，不会重复加载。
+- id: dsh-pdf-mineru
+  config:
+    schemaVersion: 3
+    activeProvider: mp_official
+    providers:
+      - id: mp_self_hosted
+        type: self-hosted-legacy-v2
+        baseURL: 'http://localhost:18000'
+        apiKeyEnv: MINERU_API_KEY
+        allowInsecureHttp: true
+        modelMap:
+          pipeline: pipeline
+          vlm: vlm-engine
+      - id: mp_official
+        type: official-v4
+        baseURL: 'https://mineru.net/api/v4'
+        apiKeyEnv: MINERU_API_KEY
+        models:
+          - pipeline
+          - vlm
+        configuredVersion: v4
+      - id: mp_self_hosted_v1
+        type: self-hosted-v1
+        baseURL: 'http://localhost:8000'
+        apiKeyEnv: MINERU_API_KEY
+        allowInsecureHttp: true
+        ocrMode: auto
+    defaults:
+      model: pipeline
+      ocr: false
+      parseMethod: auto
+      language: ch
+      formula: true
+      table: true
+    retry:
+      maxAttempts: 3
+      baseDelayMs: 500
+      maxDelayMs: 10000
