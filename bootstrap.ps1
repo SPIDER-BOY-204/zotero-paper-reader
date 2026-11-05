@@ -201,7 +201,7 @@ if ($haveBlock -and -not $ForceCopyConfig) {
 else {
     $snippet = Join-Path $ScriptDir 'cordis.patch.snippet.yml'
     if (-not (Test-Path $snippet)) { throw "缺少 $snippet" }
-    Copy-Item $patchFile "$patchFile.bak-"-(Get-Date -Format 'yyyyMMdd-HHmmss') -Force -ErrorAction SilentlyContinue
+    Copy-Item $patchFile ($patchFile + '.bak-' + (Get-Date -Format 'yyyyMMdd-HHmmss')) -Force -ErrorAction SilentlyContinue
     $body = "`n" + (Read-Utf8 $snippet)
     [System.IO.File]::AppendAllText($patchFile, $body, $Utf8NoBom)
     Write-Ok '已追加云端 provider 段（保留了两个自部署 provider，方便以后切回）'
